@@ -25,6 +25,7 @@ fn to_py_value_err<T: Error>(err: T) -> PyErr {
 ///     b'#ERRN)N RD'
 #[pyclass]
 #[derive(Debug, Clone)]
+#[pyo3(text_signature = "(base)")]
 pub struct Alphabet(pub AlphabetOriginal);
 
 #[pymethods]
@@ -93,6 +94,7 @@ fn byte_vec_to_pybytes<'a>(v: &Vec<u8>, py: Python<'a>) -> &'a PyBytes {
 ///     b'`e\xe7\x9b\xba/x'
 ///
 #[pyfunction(alphabet = "Alphabet::BITCOIN")]
+#[pyo3(text_signature = "(val, alphabet)")]
 pub fn b58decode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> PyResult<&'a PyBytes> {
     let byte_vec = decode(val)
         .with_alphabet(&alphabet.0)
@@ -118,6 +120,7 @@ pub fn b58decode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> PyResult
 ///     b'he11owor1d'
 ///
 #[pyfunction(alphabet = "Alphabet::BITCOIN")]
+#[pyo3(text_signature = "(val, alphabet)")]
 pub fn b58encode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> &'a PyBytes {
     let byte_vec = encode(val).with_alphabet(&alphabet.0).into_vec();
     byte_vec_to_pybytes(&byte_vec, py)
@@ -140,6 +143,7 @@ pub fn b58encode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> &'a PyBy
 ///     b'-1'
 ///
 #[pyfunction(alphabet = "Alphabet::BITCOIN", expected_ver = "None")]
+#[pyo3(text_signature = "(val, alphabet, expected_ver = None)")]
 pub fn b58decode_check<'a>(
     val: &[u8],
     alphabet: Alphabet,
@@ -171,11 +175,12 @@ pub fn b58decode_check<'a>(
 ///     b'QuT57JNzzWTu7mW'
 ///
 #[pyfunction(alphabet = "Alphabet::BITCOIN", expected_ver = "None")]
+#[pyo3(text_signature = "(val, alphabet, expected_ver = None)")]
 pub fn b58encode_check<'a>(
     val: &[u8],
     alphabet: Alphabet,
-    py: Python<'a>,
     expected_ver: Option<u8>,
+    py: Python<'a>,
 ) -> &'a PyBytes {
     let builder = encode(val).with_alphabet(&alphabet.0);
     let with_check = {
