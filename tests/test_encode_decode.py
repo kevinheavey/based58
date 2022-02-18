@@ -95,9 +95,11 @@ def test_round_trips(alphabet):
 
 def test_invalid_input():
     data = b"xyz\b"  # backspace is not part of the bitcoin base58 alphabet
-    assert_that(
-        calling(b58decode).with_args(data),
-        raises(ValueError, "Invalid character '\\\\x08'"),
+    with pytest.raises(ValueError) as excinfo:
+        b58decode(data)
+    assert (
+        excinfo.value.args[0]
+        == "provided string contained invalid character '\\u{8}' at byte 3"
     )
 
 
@@ -114,3 +116,13 @@ def test_decode_random(length) -> None:
     encoded = b58encode(origdata)
     data = b58decode(encoded)
     assert_that(data, equal_to(origdata))
+
+
+def test_invalid_checksum():
+    with pytest.raises(ValueError) as excinfo:
+        b58decode_check(b"4vQB7B6MrGQZaxCuFg4oh")
+    msg = (
+        "invalid checksum, calculated checksum: '[4, 49, 3, 121]', "
+        "expected checksum: [189, 114, 212, 184]"
+    )
+    assert excinfo.value.args[0] == msg
