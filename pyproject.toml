@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "based58"
+version = "0.1.0"
+description = "A fast Python library for Base58 and Base58Check"
+authors = ["kevinheavey <kevinheavey123@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+maturin = "^0.12.9"
+black = "^21.12b0"
+mypy = "^0.930"
+pytest = "^6.2.5"
+flake8 = "^4.0.1"
+Sphinx = "^4.3.2"
+sphinx-rtd-theme = "^1.0.0"
+bump2version = "^1.0.1"
+base58 = "^2.1.1"
+pytest-benchmark = "^3.4.1"
+
+[build-system]
+requires = ["maturin>=0.12,<0.13"]
+build-backend = "maturin"
+
+
+[project]
+name = "based58"
+version = "0.1.0"
+description = "A fast Python library for Base58 and Base58Check"
+authors = [ {name = "kevinheavey", email = "kevinheavey123@gmail.com"} ]
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+
+
+[project.urls]
+homepage = "https://github.com/kevinheavey/based58"
+documentation = "https://kevinheavey.github.io/based58/"
+repository = "https://github.com/kevinheavey/based58"
+changelog = "https://github.com/kevinheavey/based58/blob/main/CHANGELOG.md"
