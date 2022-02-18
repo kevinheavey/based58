@@ -8,7 +8,7 @@ on:
 
 env:
   name: based58
-  python: "3.9"
+  python_version: "3.9"
 
 jobs:
   macos:
