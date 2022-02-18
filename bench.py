@@ -1,7 +1,10 @@
 import based58
 import base58
 
-TO_DECODE = b"5MaiiCavjCmn9Hs1o3eznqDEhRwxo7pXiAYez7keQUviUkauRiTMD8DrESdrNjN8zd9mTmVhRvBJeg5vhyvgrAhG"
+TO_DECODE = (
+    b"5MaiiCavjCmn9Hs1o3eznqDEhRwxo7pXiAYez"
+    b"7keQUviUkauRiTMD8DrESdrNjN8zd9mTmVhRvBJeg5vhyvgrAhG"
+)
 TO_ENCODE = bytes(
     [
         217,
