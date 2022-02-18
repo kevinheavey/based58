@@ -10,6 +10,19 @@ fn to_py_value_err<T: Error>(err: T) -> PyErr {
     PyValueError::new_err(err.to_string())
 }
 
+/// A collection of 58 ASCII characters used to encode data.
+///
+/// Args:
+///      base (bytes): The 58 ASCII characters with which to create the alphabet.
+///      
+/// Example:
+///     >>> from based58 import Alphabet, b58decode, b58encode
+///     >>> alpha = Alphabet(b" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXY")
+///     >>> decoded = b58decode(b"he11owor1d", alphabet=Alphabet.RIPPLE)
+///     >>> decoded
+///     b'`e\xe7\x9b\xba/x'
+///     >>> b58encode(decoded, alphabet=alpha)
+///     b'#ERRN)N RD'
 #[pyclass]
 #[derive(Debug, Clone)]
 pub struct Alphabet(pub AlphabetOriginal);
