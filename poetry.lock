@@ -344,6 +344,20 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "pyhamcrest"
+version = "2.0.3"
+description = "Hamcrest framework for matcher objects"
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+dev = ["sphinx (>=3.0,<4.0)", "alabaster (>=0.7,<1.0)", "pytest (>=5.0)", "pytest-sugar", "pytest-xdist", "coverage", "types-mock", "towncrier", "twine", "pytest-mypy", "flake8", "black", "tox", "tox-pyenv", "tox-asdf", "pytest-mypy-plugins"]
+docs = ["sphinx (>=3.0,<4.0)", "alabaster (>=0.7,<1.0)"]
+tests = ["pytest (>=5.0)", "pytest-sugar", "pytest-xdist", "coverage", "types-mock", "pytest-mypy-plugins"]
+tests-numpy = ["pytest (>=5.0)", "pytest-sugar", "pytest-xdist", "coverage", "types-mock", "numpy", "pytest-mypy-plugins"]
+
+[[package]]
 name = "pyparsing"
 version = "3.0.7"
 description = "Python parsing module"
@@ -604,7 +618,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "df3a00341d5f7b3c60b2a59f38cbbdb2c8f43c008d62e2e23a1708c02f9a9f1b"
+content-hash = "46678b6bb55c787da0af52b8a87252469078d2e70607585b2a247974a5faab6d"
 
 [metadata.files]
 alabaster = [
@@ -833,6 +847,10 @@ pyflakes = [
 pygments = [
     {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},
     {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
+]
+pyhamcrest = [
+    {file = "PyHamcrest-2.0.3-py3-none-any.whl", hash = "sha256:c29dc977154c49e17c30d1ed49a0a6e31cb0dc7bcf733ac4aa9cb58519c2b00c"},
+    {file = "PyHamcrest-2.0.3.tar.gz", hash = "sha256:dfb19cf6d71743e086fbb761ed7faea5aacbc8ec10c17a08b93ecde39192a3db"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.7-py3-none-any.whl", hash = "sha256:a6c06a88f252e6c322f65faf8f418b16213b51bdfaece0524c1c1bc30c63c484"},
