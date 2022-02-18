@@ -1,0 +1,34 @@
+[
+  {
+    "name": "test_based58_decode",
+    "mean": 4.753604853374541e-06
+  },
+  {
+    "name": "test_base58_decode",
+    "mean": 3.1389558521020964e-05
+  },
+  {
+    "name": "test_based58_encode",
+    "mean": 9.863717983452433e-06
+  },
+  {
+    "name": "test_base58_encode",
+    "mean": 3.099282887025074e-05
+  },
+  {
+    "name": "test_based58_decode_check",
+    "mean": 2.451344312288521e-06
+  },
+  {
+    "name": "test_base58_decode_check",
+    "mean": 1.0791795992314131e-05
+  },
+  {
+    "name": "test_based58_encode_check",
+    "mean": 2.5439356127710083e-06
+  },
+  {
+    "name": "test_base58_encode_check",
+    "mean": 9.485853089266825e-06
+  }
+]
