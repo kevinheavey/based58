@@ -73,7 +73,6 @@ jobs:
           args: --release --out dist --no-sdist
       - name: Install built wheel
         run: |
-          ls dist
           pip install ${{ env.name }} --no-index --find-links dist --force-reinstall
           pip install pytest
           pytest
