@@ -2,4 +2,4 @@
 exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,.venv,.nox
 max-line-length = 88
 per-file-ignores = 
-    pybip39.pyi: E301,E302,F821
+    based58.pyi: E301,E302,F821
