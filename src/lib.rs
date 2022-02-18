@@ -77,6 +77,7 @@ pub fn b58encode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> &'a PyBy
 #[pymodule]
 fn based58(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(b58decode, m)?)?;
+    m.add_function(wrap_pyfunction!(b58encode, m)?)?;
     m.add_class::<Alphabet>()?;
     Ok(())
 }
