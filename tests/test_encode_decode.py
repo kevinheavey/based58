@@ -1,9 +1,8 @@
 # note: these tests are mostly copied from the base58 library
 # https://github.com/keis/base58/blob/master/test_base58.py
-import pytest
+from pytest import raises, fixture, mark
 from itertools import product
 from random import getrandbits
-from hamcrest import assert_that, equal_to, calling, raises
 from based58 import (
     b58encode,
     b58decode,
@@ -13,73 +12,79 @@ from based58 import (
 )
 
 
-@pytest.fixture(params=[Alphabet.BITCOIN, Alphabet.RIPPLE])
+@fixture(params=[Alphabet.BITCOIN, Alphabet.RIPPLE])
 def alphabet(request) -> str:
     return request.param
 
 
 def test_simple_encode():
     data = b58encode(b"hello world")
-    assert_that(data, equal_to(b"StV1DL6CwTryKyV"))
+    assert data == b"StV1DL6CwTryKyV"
 
 
 def test_leadingz_encode():
     data = b58encode(b"\0\0hello world")
-    assert_that(data, equal_to(b"11StV1DL6CwTryKyV"))
+    assert data == b"11StV1DL6CwTryKyV"
 
 
 def test_encode_empty():
     data = b58encode(b"")
-    assert_that(data, equal_to(b""))
+    assert data == b""
 
 
 def test_simple_decode():
     data = b58decode(b"StV1DL6CwTryKyV")
-    assert_that(data, equal_to(b"hello world"))
+    assert data == b"hello world"
 
 
 def test_simple_decode_bytes():
     data = b58decode(b"StV1DL6CwTryKyV")
-    assert_that(data, equal_to(b"hello world"))
+    assert data == b"hello world"
 
 
 def test_leadingz_decode():
     data = b58decode(b"11StV1DL6CwTryKyV")
-    assert_that(data, equal_to(b"\0\0hello world"))
+    assert data == b"\0\0hello world"
 
 
 def test_leadingz_decode_bytes():
     data = b58decode(b"11StV1DL6CwTryKyV")
-    assert_that(data, equal_to(b"\0\0hello world"))
+    assert data == b"\0\0hello world"
 
 
 def test_empty_decode():
     data = b58decode(b"1")
-    assert_that(data, equal_to(b"\0"))
+    assert data == b"\0"
 
 
 def test_empty_decode_bytes():
     data = b58decode(b"1")
-    assert_that(data, equal_to(b"\0"))
+    assert data == b"\0"
 
 
 def test_check_str():
     data = b"hello world"
     out = b58encode_check(data)
-    assert_that(out, equal_to(b"3vQB7B6MrGQZaxCuFg4oh"))
+    assert out == b"3vQB7B6MrGQZaxCuFg4oh"
     back = b58decode_check(out)
-    assert_that(back, equal_to(b"hello world"))
+    assert back == b"hello world"
 
 
 def test_check_failure():
     data = b"3vQB7B6MrGQZaxCuFg4oH"
-    assert_that(calling(b58decode_check).with_args(data), raises(ValueError))
+    with raises(ValueError) as excinfo:
+        b58decode_check(data)
+    msg = (
+        "invalid checksum, calculated checksum: '[188, 98, 212, 184]', "
+        "expected checksum: [188, 98, 212, 160]"
+    )
+    assert excinfo.value.args[0] == msg
 
 
 def test_check_identity(alphabet):
     data = b"hello world"
     out = b58decode_check(b58encode_check(data, alphabet=alphabet), alphabet=alphabet)
-    assert_that(out, equal_to(data))
+    assert out == data
 
 
 def test_round_trips(alphabet):
@@ -90,12 +95,12 @@ def test_round_trips(alphabet):
             bytes_out = b58decode(
                 b58encode(bytes_in, alphabet=alphabet), alphabet=alphabet
             )
-            assert_that(bytes_in, equal_to(bytes_out))
+            assert bytes_in == bytes_out
 
 
 def test_invalid_input():
     data = b"xyz\b"  # backspace is not part of the bitcoin base58 alphabet
-    with pytest.raises(ValueError) as excinfo:
+    with raises(ValueError) as excinfo:
         b58decode(data)
     assert (
         excinfo.value.args[0]
@@ -103,23 +108,23 @@ def test_invalid_input():
     )
 
 
-@pytest.mark.parametrize("length", [8, 32, 256, 1024])
+@mark.parametrize("length", [8, 32, 256, 1024])
 def test_encode_random(length) -> None:
     data = getrandbits(length * 8).to_bytes(length, byteorder="big")
     encoded = b58encode(data)
-    assert_that(b58decode(encoded), equal_to(data))
+    assert b58decode(encoded) == data
 
 
-@pytest.mark.parametrize("length", [8, 32, 256, 1024])
+@mark.parametrize("length", [8, 32, 256, 1024])
 def test_decode_random(length) -> None:
     origdata = getrandbits(length * 8).to_bytes(length, byteorder="big")
     encoded = b58encode(origdata)
     data = b58decode(encoded)
-    assert_that(data, equal_to(origdata))
+    assert data == origdata
 
 
 def test_invalid_checksum():
-    with pytest.raises(ValueError) as excinfo:
+    with raises(ValueError) as excinfo:
         b58decode_check(b"4vQB7B6MrGQZaxCuFg4oh")
     msg = (
         "invalid checksum, calculated checksum: '[4, 49, 3, 121]', "
@@ -129,7 +134,7 @@ def test_invalid_checksum():
 
 
 def test_invalid_character():
-    with pytest.raises(ValueError) as excinfo:
+    with raises(ValueError) as excinfo:
         b58decode(b"hello world")
     msg = "provided string contained invalid character 'l' at byte 2"
     assert excinfo.value.args[0] == msg
