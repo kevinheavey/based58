@@ -126,3 +126,10 @@ def test_invalid_checksum():
         "expected checksum: [189, 114, 212, 184]"
     )
     assert excinfo.value.args[0] == msg
+
+
+def test_invalid_character():
+    with pytest.raises(ValueError) as excinfo:
+        b58decode(b"hello world")
+    msg = "provided string contained invalid character 'l' at byte 2"
+    assert excinfo.value.args[0] == msg
