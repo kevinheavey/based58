@@ -6,7 +6,9 @@ A fast base-58 Python library
 [Base58](https://en.wikipedia.org/wiki/Binary-to-text_encoding#Base58)
 encoding and decoding. It includes support for Base58Check and configurable alphabets.
 
-It is significantly faster than the pure-Python
+It is
+[significantly faster](https://gist.github.com/kevinheavey/2abad728d7658c136de0078d667d7267)
+than the pure-Python
 [base58 library](https://gist.github.com/kevinheavey/2abad728d7658c136de0078d667d7267),
 as it calls the Rust [bs58 library](https://github.com/mycorrhiza/bs58-rs)
 under the hood.
