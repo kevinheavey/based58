@@ -76,6 +76,22 @@ fn byte_vec_to_pybytes<'a>(v: &Vec<u8>, py: Python<'a>) -> &'a PyBytes {
     PyBytes::new(py, v.as_slice())
 }
 
+/// Decode a base-58 value.
+///
+/// Args:
+///     val (bytes): The bytes to decode.
+///     alphabet (Alphabet, optional): The encoding alphabet. Defaults to :attr:`Alphabet.BITCOIN`.
+///     
+/// Returns:
+///     bytes: The decoded value.
+///     
+/// Example:
+///     >>> from based58 import b58decode, Alphabet
+///     >>> b58decode(b"he11owor1d")
+///     b'\x040^+$s\xf0X'
+///     >>> b58decode(b"he11owor1d", Alphabet.RIPPLE)
+///     b'`e\xe7\x9b\xba/x'
+///
 #[pyfunction(alphabet = "Alphabet::BITCOIN")]
 pub fn b58decode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> PyResult<&'a PyBytes> {
     let byte_vec = decode(val)
@@ -85,12 +101,44 @@ pub fn b58decode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> PyResult
     Ok(byte_vec_to_pybytes(&byte_vec, py))
 }
 
+/// Encode bytes into base-58.
+///
+/// Args:
+///     val (bytes): The bytes to encode.
+///     alphabet (Alphabet, optional): The encoding alphabet. Defaults to :attr:`Alphabet.BITCOIN`.
+///     
+/// Returns:
+///     bytes: The encoded value.
+///     
+/// Example:
+///     >>> from based58 import b58encode, Alphabet
+///     >>> b58encode(b"\x040^+$s\xf0X")
+///     b'he11owor1d'
+///     >>> b58encode(b'`e\xe7\x9b\xba/x', Alphabet.RIPPLE)
+///     b'he11owor1d'
+///
 #[pyfunction(alphabet = "Alphabet::BITCOIN")]
 pub fn b58encode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> &'a PyBytes {
     let byte_vec = encode(val).with_alphabet(&alphabet.0).into_vec();
     byte_vec_to_pybytes(&byte_vec, py)
 }
 
+/// Decode and check checksum using the
+/// `Base58Check <https://en.bitcoin.it/wiki/Base58Check_encoding>`_ algorithm.
+///
+/// Args:
+///     val (bytes): The bytes to decode.
+///     alphabet (Alphabet, optional): The encoding alphabet. Defaults to :attr:`Alphabet.BITCOIN`.
+///     expected_ver (int, optional):  If provided, the version byte will be used in verification. Defaults to None.
+///
+/// Returns:
+///     bytes: The decoded value.
+///
+/// Example:
+///     >>> from based58 import b58decode_check
+///     >>> b58decode_check(b"PWEu9GGN")
+///     b'-1'
+///
 #[pyfunction(alphabet = "Alphabet::BITCOIN", expected_ver = "None")]
 pub fn b58decode_check<'a>(
     val: &[u8],
@@ -106,6 +154,22 @@ pub fn b58decode_check<'a>(
     Ok(byte_vec_to_pybytes(&byte_vec, py))
 }
 
+/// Encode and check checksum using the
+/// `Base58Check <https://en.bitcoin.it/wiki/Base58Check_encoding>`_ algorithm.
+///
+/// Args:
+///     val (bytes): The bytes to encode.
+///     alphabet (Alphabet, optional): The encoding alphabet. Defaults to :attr:`Alphabet.BITCOIN`.
+///     expected_ver (int, optional):  If provided, the version byte will be used in verification. Defaults to None.
+///
+/// Returns:
+///     bytes: The encoded value.
+///
+/// Example:
+///     >>> from based58 import b58encode_check
+///     >>> b58encode_check(b"`e\xe7\x9b\xba/x")
+///     b'QuT57JNzzWTu7mW'
+///
 #[pyfunction(alphabet = "Alphabet::BITCOIN", expected_ver = "None")]
 pub fn b58encode_check<'a>(
     val: &[u8],
