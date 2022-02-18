@@ -59,25 +59,65 @@ impl Alphabet {
     }
 }
 
+fn byte_vec_to_pybytes<'a>(v: &Vec<u8>, py: Python<'a>) -> &'a PyBytes {
+    PyBytes::new(py, v.as_slice())
+}
+
 #[pyfunction(alphabet = "Alphabet::BITCOIN")]
 pub fn b58decode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> PyResult<&'a PyBytes> {
-    let byte_array = decode(val)
+    let byte_vec = decode(val)
         .with_alphabet(&alphabet.0)
         .into_vec()
         .map_err(to_py_value_err)?;
-    Ok(PyBytes::new(py, byte_array.as_slice()))
+    Ok(byte_vec_to_pybytes(&byte_vec, py))
 }
 
 #[pyfunction(alphabet = "Alphabet::BITCOIN")]
 pub fn b58encode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> &'a PyBytes {
-    let byte_array = encode(val).with_alphabet(&alphabet.0).into_vec();
-    PyBytes::new(py, byte_array.as_slice())
+    let byte_vec = encode(val).with_alphabet(&alphabet.0).into_vec();
+    byte_vec_to_pybytes(&byte_vec, py)
+}
+
+#[pyfunction(alphabet = "Alphabet::BITCOIN", expected_ver = "None")]
+pub fn b58decode_check<'a>(
+    val: &[u8],
+    alphabet: Alphabet,
+    expected_ver: Option<u8>,
+    py: Python<'a>,
+) -> PyResult<&'a PyBytes> {
+    let byte_vec = decode(val)
+        .with_alphabet(&alphabet.0)
+        .with_check(expected_ver)
+        .into_vec()
+        .map_err(to_py_value_err)?;
+    Ok(byte_vec_to_pybytes(&byte_vec, py))
+}
+
+#[pyfunction(alphabet = "Alphabet::BITCOIN", expected_ver = "None")]
+pub fn b58encode_check<'a>(
+    val: &[u8],
+    alphabet: Alphabet,
+    py: Python<'a>,
+    expected_ver: Option<u8>,
+) -> &'a PyBytes {
+    let builder = encode(val).with_alphabet(&alphabet.0);
+    let with_check = {
+        if let Some(ver) = expected_ver {
+            builder.with_check_version(ver)
+        } else {
+            builder.with_check()
+        }
+    };
+    let byte_vec = with_check.into_vec();
+    byte_vec_to_pybytes(&byte_vec, py)
 }
 
 #[pymodule]
 fn based58(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(b58decode, m)?)?;
     m.add_function(wrap_pyfunction!(b58encode, m)?)?;
+    m.add_function(wrap_pyfunction!(b58decode_check, m)?)?;
+    m.add_function(wrap_pyfunction!(b58encode_check, m)?)?;
     m.add_class::<Alphabet>()?;
     Ok(())
 }
