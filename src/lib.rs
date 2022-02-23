@@ -103,6 +103,16 @@ pub fn b58decode<'a>(val: &[u8], alphabet: Alphabet, py: Python<'a>) -> PyResult
     Ok(byte_vec_to_pybytes(&byte_vec, py))
 }
 
+#[pyfunction(alphabet = "Alphabet::BITCOIN")]
+#[pyo3(text_signature = "(val, alphabet)")]
+pub fn b58decode_vec(val: &[u8], alphabet: Alphabet) -> PyResult<Vec<u8>> {
+    let res = decode(val)
+        .with_alphabet(&alphabet.0)
+        .into_vec()
+        .map_err(to_py_value_err)?;
+    Ok(res)
+}
+
 /// Encode bytes into base-58.
 ///
 /// Args:
@@ -159,7 +169,7 @@ pub fn b58decode_check<'a>(
 }
 
 /// Encode and check checksum using the
-/// `Base58Check <https://en.bitcoin.it/wiki/Base58Check_encoding>`_ algorithm.
+/// [Base58Check](https://en.bitcoin.it/wiki/Base58Check_encoding) algorithm.
 ///
 /// Args:
 ///     val (bytes): The bytes to encode.
@@ -197,6 +207,7 @@ pub fn b58encode_check<'a>(
 #[pymodule]
 fn based58(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(b58decode, m)?)?;
+    m.add_function(wrap_pyfunction!(b58decode_vec, m)?)?;
     m.add_function(wrap_pyfunction!(b58encode, m)?)?;
     m.add_function(wrap_pyfunction!(b58decode_check, m)?)?;
     m.add_function(wrap_pyfunction!(b58encode_check, m)?)?;

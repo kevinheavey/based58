@@ -82,6 +82,10 @@ def test_based58_decode(benchmark):
     benchmark(based58.b58decode, TO_DECODE)
 
 
+def test_based58_decode_vec(benchmark):
+    benchmark(based58.b58decode_vec, TO_DECODE)
+
+
 def test_base58_decode(benchmark):
     benchmark(base58.b58decode, TO_DECODE)
 
