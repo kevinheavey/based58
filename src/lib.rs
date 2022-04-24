@@ -23,6 +23,7 @@ fn to_py_value_err<T: Error>(err: T) -> PyErr {
 ///     b'`e\xe7\x9b\xba/x'
 ///     >>> b58encode(decoded, alphabet=alpha)
 ///     b'#ERRN)N RD'
+///
 #[pyclass]
 #[derive(Debug, Clone)]
 #[pyo3(text_signature = "(base)")]
