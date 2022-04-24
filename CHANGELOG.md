@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Upgrade pyo3 for platform compatibility ([#2]())
+- Upgrade pyo3 for platform compatibility ([#2](https://github.com/kevinheavey/based58/pull/2))
 
 ## [0.1.0] - 2022-02-18
 
