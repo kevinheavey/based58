@@ -170,23 +170,23 @@ jobs:
           target: ${{ matrix.platform.target }}
           manylinux: musllinux_1_2
           args: --release --out dist --no-sdist
-    - uses: uraimo/run-on-arch-action@master
-      name: Install built wheel
-      with:
-        arch: ${{ matrix.platform.arch }}
-        distro: alpine_latest
-        githubToken: ${{ github.token }}
-        install: |
-          apk add py3-pip
-          pip3 install -U pip pytest
-        run: |
-          pip3 install ${{ env.name }} --no-index --find-links dist/ --force-reinstall
-          cd tests && python3 -m pytest
-      - name: Upload wheels
-        uses: actions/upload-artifact@v2
+      - uses: uraimo/run-on-arch-action@master
+        name: Install built wheel
         with:
-          name: wheels
-          path: dist
+          arch: ${{ matrix.platform.arch }}
+          distro: alpine_latest
+          githubToken: ${{ github.token }}
+          install: |
+            apk add py3-pip
+            pip3 install -U pip pytest
+          run: |
+            pip3 install ${{ env.name }} --no-index --find-links dist/ --force-reinstall
+            cd tests && python3 -m pytest
+        - name: Upload wheels
+          uses: actions/upload-artifact@v2
+          with:
+            name: wheels
+            path: dist
 
   linux-cross:
     runs-on: ubuntu-latest
