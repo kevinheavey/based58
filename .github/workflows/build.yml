@@ -182,11 +182,11 @@ jobs:
           run: |
             pip3 install ${{ env.name }} --no-index --find-links dist/ --force-reinstall
             cd tests && python3 -m pytest
-        - name: Upload wheels
-          uses: actions/upload-artifact@v2
-          with:
-            name: wheels
-            path: dist
+      - name: Upload wheels
+        uses: actions/upload-artifact@v2
+        with:
+          name: wheels
+          path: dist
 
   linux-cross:
     runs-on: ubuntu-latest
